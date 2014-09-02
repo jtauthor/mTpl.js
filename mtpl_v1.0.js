@@ -93,17 +93,17 @@
     };
 
     function mTpl(opt){
-        var str                 = opt.str,	
-            data                = opt.data,	
-            startSelector       = opt.startSelector || '<' + '%',
-            endSelector         = opt.endSelector || '%' + '>', 
-            isCache             = opt.isCache != undefined ? opt.isCache : true, 
+        var str             = opt.str,	
+            data            = opt.data,	
+            startSelector   = opt.startSelector || '<' + '%',
+            endSelector     = opt.endSelector || '%' + '>', 
+            isCache         = opt.isCache != undefined ? opt.isCache : true, 
 
-            scope               = opt.scope || this, 
-            isEncode            = opt.isEncode || false,
-            isKeepRN            = opt.isKeepRN || false, 
-            isKeepCommentRN     = opt.isKeepCommentRN || true,
-            htmlCommentCode     = opt.htmlCommentCode != undefined ? opt.htmlCommentCode : 1, 
+            scope           = opt.scope || this, 
+            isEncode        = opt.isEncode || false,
+            isKeepRN        = opt.isKeepRN || false, 
+            isKeepCommentRN = opt.isKeepCommentRN || true,
+            htmlCommentCode = opt.htmlCommentCode != undefined ? opt.htmlCommentCode : 1, 
 
             tpl         = document.getElementById(str) ? document.getElementById(str).innerHTML : str,
             valueArr    = [], 
