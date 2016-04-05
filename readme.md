@@ -21,7 +21,7 @@
     极速微模板解析引擎mTpl，您值得拥有！
 
     mTpl({      
-        str                 : str,          //模板id || 模板text
+        text                : text,         //模板id || 模板text
         data                : {},           //数据源json 
         startSelector       : '<' + '%',    //开始选择符 
         endSelector         : '%' + '>',    //结束选择符
@@ -33,7 +33,8 @@
         isKeepCommentRN     : true,         //是否保留注释中的回车换行符
         htmlCommentCode     : 1             //是否支持html注释, 共三个值: 0不支持 1支持并输出 2支持但不输出
     })
-    
+
+ 
     注意：
         当isKeepRN==true时，模板里的单条语句不支持分行书写(注释部分不受此约束)，如以下书写方式都会报错
                 <%
@@ -42,9 +43,11 @@
             或
                 <% var 
                     a=1;
-                %>          
-        isKeepRN==false时不受此限制。
-        
-        这块是个缺点，正在努力完善中~~
+                %>
+        正确的应该是：
+            <% var a=1; %>
 
- 
+        当isKeepRN==false时不受此限制。
+        
+        这块是个缺点，未来会修复~~
+

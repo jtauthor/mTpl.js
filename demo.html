@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>demo</title>
+    <script src="mtpl_v1.0.js"></script>
+    <style>
+        body{font-family: Monaco;}
+        ul,li,p{margin:0; padding:0;list-style-type: none;}
+        .page-wrap{margin:auto;min-width:500px;}
+        .box{margin:10px auto;padding:10px; border: 5px solid #336699;}
+        .list{padding: 20px;}
+        textarea{display: block;min-height:500px;width: 100%;box-sizing: border-box;}
+    </style>     
+</head>
+<body>
+<div class="page-wrap">
+    <p>下面是一个div元素</p>
+    <div id="container1" class="box" style=""></div>
+    <p>下面是一个textarea元素</p>
+    <textarea id="container2" class="box" style=""></textarea>
+</div>
+
+
+<!-- Html模板 -->
+<script id="source1" type="text/tpl">
+    <!-- 我是注释 -->   
+    <h3>在Html里直接编写mTpl模板</h3>
+
+    <ul class="lst1">
+        <li>一、输出特殊字符测试: <&#37;, &#37>, ', ", \, \\, \', \\', \", \\", \t, \n, \r </li>
+        <li>二、脚本任意写，无需担心存在单引号，双引号，还是特殊字符，只要符合js语法即可
+            <% var str1='测试执行脚本1'; %>
+            <%= str1+'成功' %>
+
+            <% var str2='测试执行脚本2'; %>
+            <%= str2+'成功' %>
+        </li>
+        
+        <li>三、深层遍历完全支持
+            <ul style="margin-left:60px;">      
+                <% for (i = 0, l = list.length; i < l; i ++) {%>
+                    <li>
+                        索引: <%=list[i].index + this.start%>
+                        姓名: <%=list[i].name%>
+                        年龄: <%=list[i].age%>
+                    </li>
+                <% } %>
+            </ul>
+        </li>
+        <li>四、完美支持局部作用域
+            <%= this.testFunc() %>
+        </li>
+    </ul>
+</script>
+
+<script id="test_xss" type="text/tpl">
+   <ul>  
+      <% for (i = 0, l = list.length; i < l; i++) { %>
+         <li>
+            索引: <%=list[i].index%>
+            姓名: <%=list[i].name%>
+            年龄: <%=list[i].age%>
+         </li>
+      <% } %>
+   </ul>
+</script>
+
+<!-- JavaScript模板 -->   
+<script>
+
+    var source2 =''+
+    '<ul style="margin-left:60px;">'+
+    '   <% for (var i = 0, l = list.length; i < l; i ++) { %>\n'+
+    '   <li>\n'+
+    '       索引: <%=list[i].index + start%>\n'+
+    '       姓名: <%=list[i].name%>\n'+
+    '       年龄: <%=list[i].age%>\n'+
+    '   </li>\n'+
+    '   <% } %>\n'+
+    '</ul>\n'+      
+    '\n';   
+
+</script>
+
+<!-- 执行脚本 -->       
+<script>
+    var data={
+        list :[
+            {index:0, name:"Hellen", age:24},
+            {index:1, name:"Sophia", age:25},
+            {index:2, name:"<iframe/src=javascript:alert('xss漏洞')>", age:25}, //恶意脚本
+            {index:3, name:"Barton", age:28}
+        ]
+    };
+
+    var scope={
+        start   : 11,
+        testFunc : function(){
+            return ' 测试函数成功执行！';
+        }
+    };
+    
+    var source1  = document.getElementById('source1').innerHTML;        
+    
+    var outHtml = mTpl({
+        text : source1,
+        scope               : scope,        //作用域
+        isEncode            : true,         //布尔值或函数                                 
+        isKeepRN            : true,         //是否保留源码中的回车换行符(不含注释部分)
+        isKeepCommentRN     : true,         //是否保留注释中的回车换行符
+        htmlCommentCode     : 1,            //是否支持html注释, 共三个值: 0不支持 1支持并输出 2支持但不输出
+        data : data
+    });
+
+    document.getElementById('container1').innerHTML=outHtml;
+    document.getElementById('container2').value=outHtml;
+</script>   
+    
+</body>
+</html>

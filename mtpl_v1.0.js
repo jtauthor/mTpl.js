@@ -21,7 +21,7 @@
                         return f(s+a);
                     }
                     return s;
-                };	
+                };
             return f(a);
         },
 
@@ -36,7 +36,7 @@
                     });
 
             s = htmlCommentCode !=1 || !isKeepCommentRN ? s : s
-                    .replace(/<!--(?:(?!-->)[\s\S])*-->/g, function(l){
+                    .replace(/<!--(?:(?!-->)[^])*-->/g, function(l){
                         return l
                             .replace(new RegExp(r,'g'),'\r')
                             .replace(new RegExp(n,'g'),'\n');
@@ -55,21 +55,21 @@
         }, 
 
         formatTpl : function(tpl, r, n, startSelector, endSelector, htmlCommentCode, commentObj, isKeepRN, isEncode, isError){
-            var a = startSelector, b = endSelector;	
-            if( !(tpl && a && b) ) {return ''} 	
+            var a = startSelector, b = endSelector;
+            if( !(tpl && a && b) ) {return ''} 
             if(!(tpl.indexOf(a) > -1 && tpl.indexOf(b) > -1)){return tpl}
 
             var lineBr  = isError? '\n' : '', 
                 left    = this.setChar('L', tpl), 
-                reg     = T.getReg_rangeOutChar(left, b, "'");	
+                reg     = T.getReg_rangeOutChar(left, b, "'");
 
             tpl = isError || !isKeepRN ? tpl.replace(/[\r\n]/g, ' ') : tpl
                     .replace(/\r/g, r) 
                     .replace(/\n/g, n);
 
             tpl = htmlCommentCode==0 ? tpl : 
-                    htmlCommentCode==2 ? tpl.replace(/<!--(?:(?!-->)[\s\S])*-->/g, '') : tpl	
-                        .replace(/<!--(?:(?!-->)[\s\S])*-->/g, function(l){					
+                    htmlCommentCode==2 ? tpl.replace(/<!--(?:(?!-->)[^])*-->/g, '') : tpl
+                        .replace(/<!--(?:(?!-->)[^])*-->/g, function(l){
                             var i=commentObj.length++;
                             commentObj[i]=l;
                             return 'mTpl_comment'+i+';';
@@ -93,8 +93,8 @@
     };
 
     function mTpl(opt){
-        var str             = opt.str,	
-            data            = opt.data,	
+        var str             = opt.text,
+            data            = opt.data,
             startSelector   = opt.startSelector || '<' + '%',
             endSelector     = opt.endSelector || '%' + '>', 
             isCache         = opt.isCache != undefined ? opt.isCache : true, 
@@ -147,7 +147,7 @@
             s = fn.apply(scope, valueArr);
         }
 
-        return T.recoverChar(s, r, n, isKeepRN, isKeepCommentRN, htmlCommentCode, commentObj);	
+        return T.recoverChar(s, r, n, isKeepRN, isKeepCommentRN, htmlCommentCode, commentObj);
     } 
     
     typeof exports != 'undefined' ? exports.mTpl = mTpl : window.mTpl = mTpl;
